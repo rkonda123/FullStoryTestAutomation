@@ -29,11 +29,10 @@ public class Test1 {
     }
 
     /**
-     * Test to verify that when the user navigates from one page to another within FruitShoppe website,
-     * query params like OrgId, UserId, SessionId etc are the same
+     * Test to verify that the event capturing Mangocados added to the cart is recorded
      */
     @Test
-    public void testQueryParamsAfterNavigatingToAnotherPage() throws Exception {
+    public void testAddMangocadosToCartEvent() throws Exception {
         driver.get(SHOPPE_URL);
 
         // Wait for some time since the events are sent to full story server after few seconds
@@ -47,7 +46,7 @@ public class Test1 {
         Assert.assertNotNull(seq1Params, "Sequence 1 not found");
 
         // Click on Mangocados link
-        driver.findElement(By.xpath("//a[@href='#/market']")).click();
+        driver.findElement(By.xpath("//a[contains(., 'Mangocados')]")).click();
 
         // Wait for some more time for the events to be captured and sent to server
         Thread.sleep(6000);
@@ -70,6 +69,10 @@ public class Test1 {
                 "PageId does not match after navigating to new page. Expected:" + seq1Params.getPageId() + ", found:" + seq3Params.getPageId() );
         Assert.assertEquals(seq1Params.getPageStart(), seq3Params.getPageStart(),
                 "PageStart does not match after navigating to new page. Expected:" + seq1Params.getPageStart() + ", found:" + seq3Params.getPageStart() );
+
+        // Verify that the event capturing Mangocados being added to the card is in post data
+        Assert.assertTrue(seq3Params.getPostData().contains("Product Added"));
+        Assert.assertTrue(seq3Params.getPostData().contains("Mangocados"));
     }
 
     /**
@@ -213,6 +216,8 @@ public class Test1 {
                                 sequenceQueryParams.setIsNewSession(value);
                             }
                         }
+                        Object postData = ((JSONObject) request).get("postData");
+                        sequenceQueryParams.setPostData((String) postData);
                     }
                 }
 

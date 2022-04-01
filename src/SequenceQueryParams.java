@@ -11,6 +11,7 @@ public class SequenceQueryParams {
     private String prevBundleTime;
     private String lastActivity;
     private String isNewSession;
+    private String postData;
 
     public String getOrgId() {
         return orgId;
@@ -82,5 +83,13 @@ public class SequenceQueryParams {
 
     public void setIsNewSession(String isNewSession) {
         this.isNewSession = isNewSession;
+    }
+
+    public String getPostData() {
+        return postData;
+    }
+
+    public void setPostData(String postData) {
+        this.postData = postData;
     }
 }
